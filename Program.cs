@@ -1,6 +1,7 @@
 using AutoMapper;
 using GoHappy.API.Data;
 using GoHappy.API.Mappers;
+using GoHappy.API.Services;
 using Microsoft.EntityFrameworkCore;
 
 namespace GoHappy.API
@@ -11,17 +12,17 @@ namespace GoHappy.API
 		{
 			var builder = WebApplication.CreateBuilder(args);
 
-			// Add services to the container.
-
 			builder.Services.AddControllers();
 			builder.Services.AddEndpointsApiExplorer();
 			builder.Services.AddSwaggerGen();
 
-			// Add DbContext
+
 			builder.Services.AddDbContext<ApplicationDbContext>(options =>
 			{
 				options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 			});
+
+			builder.Services.AddScoped<IListingRepository, ListingRepository>();
 
 			// Add AutoMapper and specify the assembly where the profiles are located
 			builder.Services.AddAutoMapper(typeof(MappingProfile));

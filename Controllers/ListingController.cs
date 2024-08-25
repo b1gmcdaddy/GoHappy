@@ -2,6 +2,7 @@
 using GoHappy.API.Data;
 using GoHappy.API.Dtos.ListingDtos;
 using GoHappy.API.Models;
+using GoHappy.API.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
@@ -14,10 +15,12 @@ namespace GoHappy.API.Controllers
 	public class ListingController : ControllerBase
 	{
 		private readonly ApplicationDbContext _context;
+		private readonly IListingRepository _listingRepo;
 		private readonly IMapper _mapper;
 
-		public ListingController(ApplicationDbContext context, IMapper mapper)
+		public ListingController(ApplicationDbContext context, IMapper mapper, IListingRepository listingRepo)
 		{
+			_listingRepo = listingRepo;
 			_context = context;
 			_mapper = mapper;
 		}
@@ -25,7 +28,7 @@ namespace GoHappy.API.Controllers
 		[HttpGet]
 		public async Task<IActionResult> GetAllListings()
 		{
-			var listings =  await _context.Listings.ToListAsync();
+			var listings = await _listingRepo.GetAllListingsAsync();
 			var listingDtos = _mapper.Map<IEnumerable<ListingDto>>(listings);
 			return Ok(listingDtos);
 		}
@@ -33,7 +36,7 @@ namespace GoHappy.API.Controllers
 		[HttpGet("{id}")]
 		public async Task<IActionResult> GetListingById([FromRoute] int id)
 		{
-			var listing = await _context.Listings.FindAsync(id);
+			var listing = await _listingRepo.GetListingByIdAsync(id);	
 
 			if (listing == null)
 			{
@@ -48,8 +51,7 @@ namespace GoHappy.API.Controllers
 		public async Task<IActionResult> CreateListing([FromBody] CreateListingDto listingDto)
 		{
 			var listingModel = _mapper.Map<Listing>(listingDto);
-			_context.Listings.Add(listingModel);
-			await _context.SaveChangesAsync();
+			await _listingRepo.CreateListingAsync(listingModel);
 			return CreatedAtAction(nameof(GetListingById), new { id = listingModel.Id }, listingModel);
 		}
 
@@ -57,32 +59,14 @@ namespace GoHappy.API.Controllers
 		[Route("{id}")]
 		public async Task<IActionResult> UpdateListing([FromRoute] int id, [FromBody] UpdateListingDto updateDto)
 		{
-			var listingModel = await _context.Listings.FindAsync(id);
-
-			if (listingModel == null)
-			{
-				return NotFound();
-			}
-
-			_mapper.Map(updateDto, listingModel);
-
-			await _context.SaveChangesAsync();
-
+			var listingModel = await _listingRepo.UpdateListingAsync(id, updateDto);
 			return NoContent();
 		}
 
 		[HttpDelete("{id}")]
 		public async Task<IActionResult> DeleteListing([FromRoute] int id)
 		{
-			var listingModel = await _context.Listings.FindAsync(id);
-
-			if (listingModel == null)
-			{
-				return NotFound();
-			}
-
-			_context.Listings.Remove(listingModel);
-			await _context.SaveChangesAsync();
+			var listingModel = await _listingRepo.DeleteListingAsync(id);
 			return NoContent();	
 		}
 	}
