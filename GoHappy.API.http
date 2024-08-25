@@ -1,0 +1,6 @@
+@GoHappy.API_HostAddress = http://localhost:5074
+
+GET {{GoHappy.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
