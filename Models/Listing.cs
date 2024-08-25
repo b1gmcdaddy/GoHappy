@@ -13,6 +13,6 @@ namespace GoHappy.API.Models
 		[Column(TypeName = "decimal(18,2)")]
 		public decimal Price { get; set; }
 
-		public List<Review> Review { get; set; } = new List<Review>();
+		public List<Review> Reviews { get; set; } = new List<Review>();
 	}
 }

@@ -1,4 +1,5 @@
-﻿using GoHappy.API.Models;
+﻿using GoHappy.API.Dtos.ReviewDtos;
+using GoHappy.API.Models;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace GoHappy.API.Dtos.ListingDtos
@@ -12,6 +13,8 @@ namespace GoHappy.API.Dtos.ListingDtos
 		public string? Description { get; set; }
 
 		public decimal Price { get; set; }
+
+		public List<ReviewDto> Reviews { get; set; } = new List<ReviewDto>();
 
 	}
 }

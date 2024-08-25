@@ -1,6 +1,8 @@
-﻿namespace GoHappy.API.Models
+﻿using GoHappy.API.Models;
+
+namespace GoHappy.API.Dtos.ReviewDtos
 {
-	public class Review
+	public class ReviewDto
 	{
 		public int Id { get; set; }
 
@@ -8,8 +10,6 @@
 
 		public DateTime CreatedOn { get; set; } = DateTime.Now;
 
-		public int? ListingId { get; set; }	
-
-		public Listing? Listing { get; set; } 
+		public int? ListingId { get; set; }
 	}
 }

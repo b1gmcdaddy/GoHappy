@@ -19,12 +19,12 @@ namespace GoHappy.API.Services
 
         public async Task<List<Listing>> GetAllListingsAsync()
 		{
-			return await _context.Listings.ToListAsync();
+			return await _context.Listings.Include(l => l.Reviews).ToListAsync();
 		}
 
 		async Task<Listing?> IListingRepository.GetListingByIdAsync(int id)
 		{
-			return await _context.Listings.FindAsync(id);
+			return await _context.Listings.Include(l => l.Reviews).FirstOrDefaultAsync(l => l.Id == id);
 		}
 
 		async Task<Listing> IListingRepository.CreateListingAsync(Listing listing)
@@ -62,6 +62,11 @@ namespace GoHappy.API.Services
 			await _context.SaveChangesAsync();
 
 			return existingListing;
+		}
+
+		public async Task<bool> ListingExists(int id)
+		{
+			return await _context.Listings.AnyAsync(l => l.Id == id);
 		}
 	}
 }

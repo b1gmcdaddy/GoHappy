@@ -16,6 +16,9 @@ namespace GoHappy.API
 			builder.Services.AddEndpointsApiExplorer();
 			builder.Services.AddSwaggerGen();
 
+			builder.Services.AddControllers().AddNewtonsoftJson(options => {
+				options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+			});
 
 			builder.Services.AddDbContext<ApplicationDbContext>(options =>
 			{
@@ -23,6 +26,9 @@ namespace GoHappy.API
 			});
 
 			builder.Services.AddScoped<IListingRepository, ListingRepository>();
+			builder.Services.AddScoped<IReviewRepository, ReviewRepository>();
+
+	
 
 			// Add AutoMapper and specify the assembly where the profiles are located
 			builder.Services.AddAutoMapper(typeof(MappingProfile));

@@ -10,5 +10,6 @@ namespace GoHappy.API.Services
 		Task<Listing> CreateListingAsync(Listing listing);
 		Task<Listing?> UpdateListingAsync(int id, UpdateListingDto listingDto);
 		Task<Listing?> DeleteListingAsync(int id);
+		Task<bool> ListingExists(int id);
 	}
 }
